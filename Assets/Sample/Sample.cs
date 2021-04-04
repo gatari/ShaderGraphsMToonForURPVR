@@ -1,34 +1,3 @@
-# Shader Graphs MToon for URP VR
-
-![main](README/ShaderGraphsMToon.jpg)  
-
-## Requirements
-- Unity 2020.3
-    - Universal RP 10
-
-## Getting Started
-
-Open `Scenes/SampleScene`, and enter local VRM file path into `Sample` Component.
-Then click button to load runtime.
-
-![graph](README/shadergraph.jpg)  
-
-## Installation
-```json
-{
-  "dependencies" : {
-    ...
-    "simplestargame.shadergraphs-mtoon-for-urp-vr" : "git+https://github.com/gatari/ShaderGraphsMToonForURPVR.git#gatari/main?path=/SimplestarGame/ShaderGraphsMToon",
-    ...
-  }
-}
-```
-
-## How to use
-
-- use `ShaderGraphsVRMImporterContext` instead of `VRMImporterContext`.
-
-```cs
 using System.IO;
 using Cysharp.Threading.Tasks;
 using SimplestarGame;
@@ -61,7 +30,7 @@ namespace Sample
             var parser = new GltfParser();
             parser.Parse(path, bytes);
 
-            using (var context = new ShaderGraphsVRMImporterContext(parser))
+            using (var context = new ShaderGraphVRMImporterContext(parser))
             {
                 var meta = await context.ReadMetaAsync();
                 Debug.LogFormat(meta.Title);
@@ -76,7 +45,3 @@ namespace Sample
         }
     }
 }
- ```
-Load Result in SimpleViewer scene of [UniVRM Sample package](https://github.com/vrm-c/UniVRM).
-
-You should learn about [MToon](https://www.slideshare.net/VirtualCast/vrm-mtoon) (Japanese).

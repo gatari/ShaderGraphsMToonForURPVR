@@ -1,0 +1,16 @@
+{
+  "name": "simplestargame.shadergraphs-mtoon-for-urp-vr",
+  "version": "0.1.0",
+  "displayName": "ShaderGraphsMToon",
+  "unity": "2020.3",
+  "keywords": [
+    "vrm",
+    "importer",
+    "avatar",
+    "vr"
+  ],
+  "dependencies": {
+    "com.vrmc.vrmshaders": "0.70.0",
+    "com.vrmc.unigltf": "2.6.0"
+  }
+}
