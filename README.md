@@ -18,7 +18,7 @@ Then click button to load runtime.
 {
   "dependencies" : {
     ...
-    "simplestargame.shadergraphs-mtoon-for-urp-vr" : "git+https://github.com/gatari/ShaderGraphsMToonForURPVR.git#gatari/main?path=/SimplestarGame/ShaderGraphsMToon",
+    "simplestargame.shadergraphs-mtoon-for-urp-vr" : "git+https://github.com/gatari/ShaderGraphsMToonForURPVR.git?path=Assets/SimplestarGame/ShaderGraphsMToon#gatari/main",
     ...
   }
 }
