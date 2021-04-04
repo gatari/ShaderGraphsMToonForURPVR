@@ -6,7 +6,7 @@ using VRMShaders;
 
 namespace SimplestarGame
 {
-    public class ShaderGraphMToonMaterialImporter
+    public class ShaderGraphsMToonMaterialImporter
     {
         public static bool TryCreateParam(GltfParser parser, int i, glTF_VRM_Material vrmMaterial,
             out MaterialImportParam param)
@@ -23,12 +23,11 @@ namespace SimplestarGame
             //
             // use material.name, because material name may renamed in GltfParser.
             var name = parser.GLTF.materials[i].name;
-            // param = new MaterialImportParam(name, vrmMaterial.shader);
+            
+            // edit shader name
             param = new MaterialImportParam(name, "Shader Graphs/MToon");
 
-            Debug.Log("Convered to ShaderGraph Material");
-
-            // param.Actions.Add(material => material.renderQueue = vrmMaterial.renderQueue);
+            // edit render queue
             param.Actions.Add(material =>
                 material.renderQueue = (int) UnityEngine.Rendering.RenderQueue.GeometryLast < vrmMaterial.renderQueue
                     ? (int) UnityEngine.Rendering.RenderQueue.GeometryLast
@@ -97,7 +96,7 @@ namespace SimplestarGame
 
         private readonly List<glTF_VRM_Material> _materials;
 
-        public ShaderGraphMToonMaterialImporter(List<glTF_VRM_Material> materials)
+        public ShaderGraphsMToonMaterialImporter(List<glTF_VRM_Material> materials)
         {
             _materials = materials;
         }

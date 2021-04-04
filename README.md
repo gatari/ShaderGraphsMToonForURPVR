@@ -3,33 +3,79 @@
 ![main](README/ShaderGraphsMToon.jpg)  
 
 ## Requirements
-- Unity 2019.4.20f1  
-    - Universal RP 7.5.3  
+- Unity 2020.3
+    - Universal RP 10
 
 ## Getting Started
 
-Open SimplestarGame/ShaderGraphsMToon/Scenes/SampleScene  
-
-Play VR Single Pass Stereo Rendering Mode.
-
-A cube GameObject has the MToon Shader.  
+Open `Scenes/SampleScene`, and enter local VRM file path into `Sample` Component.
+Then click button to load runtime.
 
 ![graph](README/shadergraph.jpg)  
 
-## Check Example VRM Scene
+## Installation
+```json
+{
+  "dependencies" : {
+    ...
+    "simplestargame.shadergraphs-mtoon-for-urp-vr" : "git+https://github.com/gatari/ShaderGraphsMToonForURPVR.git#gatari/main?path=/SimplestarGame/ShaderGraphsMToon",
+    ...
+  }
+}
+```
 
-1. Find VRMMaterialImporter if you use [UniVRM package](https://github.com/vrm-c/UniVRM)  
-    Edit lines as follows.
- ```cs
- // 1 select shader
- var shaderName = item.shader;
- ↓
- var shaderName = "Shader Graphs/MToon";//item.shader;
+## How to use
 
- // 2 use geometry queue
- material.renderQueue = item.renderQueue;
- ↓
- material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.GeometryLast < item.renderQueue ? (int)UnityEngine.Rendering.RenderQueue.GeometryLast : item.renderQueue;
+- use `ShaderGraphsVRMImporterContext` instead of `VRMImporterContext`.
+
+```cs
+using System.IO;
+using Cysharp.Threading.Tasks;
+using SimplestarGame;
+using UniGLTF;
+using UnityEngine;
+
+namespace Sample
+{
+    public class Sample : MonoBehaviour
+    {
+        [SerializeField] private string path;
+
+        public void Load()
+        {
+            LoadInternal().Forget();
+        }
+
+        private async UniTask LoadInternal()
+        {
+            Debug.Log($"load from path : {path}");
+
+            byte[] bytes;
+
+            using (var stream = File.OpenRead(path))
+            {
+                bytes = new byte[stream.Length];
+                await stream.ReadAsync(bytes, 0, (int) stream.Length);
+            }
+
+            var parser = new GltfParser();
+            parser.Parse(path, bytes);
+
+            using (var context = new ShaderGraphsVRMImporterContext(parser))
+            {
+                var meta = await context.ReadMetaAsync();
+                Debug.LogFormat(meta.Title);
+
+                await context.LoadAsync();
+
+                context.ShowMeshes();
+                context.DisposeOnGameObjectDestroyed();
+            }
+            
+            Debug.Log($"load completed");
+        }
+    }
+}
  ```
 Load Result in SimpleViewer scene of [UniVRM Sample package](https://github.com/vrm-c/UniVRM).
 

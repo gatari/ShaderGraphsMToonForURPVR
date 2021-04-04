@@ -11,11 +11,11 @@ namespace SimplestarGame
             IEnumerable<(string, Object)> externalObjectMap = null)
             : base(parser, externalObjectMap)
         {
-            // parse VRM part
+            // intercept MToonMaterialImporter by Inserting importer
             if (glTF_VRM_extensions.TryDeserialize(GLTF.extensions, out glTF_VRM_extensions vrm))
             {
                 GltfMaterialImporter.GltfMaterialParamProcessors.Insert(0,
-                    new ShaderGraphMToonMaterialImporter(VRM.materialProperties).TryCreateParam);
+                    new ShaderGraphsMToonMaterialImporter(VRM.materialProperties).TryCreateParam);
             }
         }
     }
