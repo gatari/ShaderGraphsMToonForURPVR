@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 using UniGLTF;
 using VRM;
+using VRMShaders;
 using Object = UnityEngine.Object;
 
 namespace SimplestarGame
 {
     public class ShaderGraphVRMImporterContext : VRMImporterContext
     {
-        public ShaderGraphVRMImporterContext(GltfParser parser,
-            IEnumerable<(string, Object)> externalObjectMap = null)
-            : base(parser, externalObjectMap)
+        public ShaderGraphVRMImporterContext(GltfData data,
+            IReadOnlyDictionary<SubAssetKey, Object> externalObjectMap = null)
+            : base(data, externalObjectMap)
         {
-            // intercept MToonMaterialImporter by Inserting importer
-            if (glTF_VRM_extensions.TryDeserialize(GLTF.extensions, out glTF_VRM_extensions vrm))
+            // override material descriptor
+            if (glTF_VRM_extensions.TryDeserialize(GLTF.extensions, out var vrm))
             {
-                GltfMaterialImporter.GltfMaterialParamProcessors.Insert(0,
-                    new ShaderGraphsMToonMaterialImporter(VRM.materialProperties).TryCreateParam);
+                MaterialDescriptorGenerator = new ShaderGraphsVRMMaterialDescriptorGenerator(vrm);
             }
         }
     }
