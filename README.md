@@ -29,6 +29,7 @@ Then click button to load runtime.
 - use `ShaderGraphsVRMImporterContext` instead of `VRMImporterContext`.
 
 ```cs
+  
 using System.IO;
 using Cysharp.Threading.Tasks;
 using SimplestarGame;
@@ -49,29 +50,15 @@ namespace Sample
         private async UniTask LoadInternal()
         {
             Debug.Log($"load from path : {path}");
+            var data = new GlbFileParser(path).Parse();
 
-            byte[] bytes;
+            using var context = new ShaderGraphVRMImporterContext(data);
+            var meta = await context.ReadMetaAsync();
+            Debug.LogFormat(meta.Title);
 
-            using (var stream = File.OpenRead(path))
-            {
-                bytes = new byte[stream.Length];
-                await stream.ReadAsync(bytes, 0, (int) stream.Length);
-            }
+            var loaded = await context.LoadAsync();
+            loaded.ShowMeshes();
 
-            var parser = new GltfParser();
-            parser.Parse(path, bytes);
-
-            using (var context = new ShaderGraphsVRMImporterContext(parser))
-            {
-                var meta = await context.ReadMetaAsync();
-                Debug.LogFormat(meta.Title);
-
-                await context.LoadAsync();
-
-                context.ShowMeshes();
-                context.DisposeOnGameObjectDestroyed();
-            }
-            
             Debug.Log($"load completed");
         }
     }
